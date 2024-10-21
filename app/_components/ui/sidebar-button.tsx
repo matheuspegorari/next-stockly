@@ -13,8 +13,8 @@ const SidebarButton = ({ icon, text, href }: SidebarButtonProps) => {
   const pathName = usePathname();
   return (
     <Button
-      variant={pathName === href ? "default" : "ghost"}
-      className="justify-start gap-2"
+      variant={pathName === href ? "default" : "ghost"}      
+      className=" justify-start gap-2 px-2 h-14"
       asChild
     >
       <Link href={href}>
