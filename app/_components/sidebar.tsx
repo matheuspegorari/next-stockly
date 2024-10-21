@@ -1,3 +1,5 @@
+import { Button } from "./ui/button";
+
 const Sidebar = () => {
   return (
     <>
@@ -8,9 +10,9 @@ const Sidebar = () => {
         </div>
         {/* Botões */}
         <div className="flex flex-col gap-2 p-2">
-          <button className="px-6 py-3">Dashboard</button>
-          <button className="px-6 py-3">Produtos</button>
-          <button className="px-6 py-3">Vendas</button>
+          <Button className="px-6 py-3">Dashboard</Button>
+          <Button className="px-6 py-3">Produtos</Button>
+          <Button className="px-6 py-3">Vendas</Button>
         </div>
       </div>
     </>
