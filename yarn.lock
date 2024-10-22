@@ -414,6 +414,18 @@
     "@swc/counter" "^0.1.3"
     tslib "^2.4.0"
 
+"@tanstack/react-table@^8.20.5":
+  version "8.20.5"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.20.5.tgz#19987d101e1ea25ef5406dce4352cab3932449d8"
+  integrity sha512-WEHopKw3znbUZ61s9i0+i9g8drmDo6asTWbrQh8Us63DAk/M0FkmIqERew6P71HI75ksZ2Pxyuf4vvKh9rAkiA==
+  dependencies:
+    "@tanstack/table-core" "8.20.5"
+
+"@tanstack/table-core@8.20.5":
+  version "8.20.5"
+  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.20.5.tgz#3974f0b090bed11243d4107283824167a395cf1d"
+  integrity sha512-P9dF7XbibHph2PFRz8gfBKEXEY/HJPOhym8CHmjF8y3q5mWpKx9xtZapXQUWCgkqvsK0R46Azuz+VaxD4Xl+Tg==
+
 "@types/json-schema@^7.0.12":
   version "7.0.15"
   resolved "https://registry.npmjs.org/@types/json-schema/-/json-schema-7.0.15.tgz"
@@ -2654,6 +2666,7 @@ source-map-js@^1.0.2, source-map-js@^1.2.1:
 "stockly@file:.":
   version "0.1.0"
   dependencies:
+    "@prisma/client" "^5.21.1"
     "@radix-ui/react-accordion" "^1.2.1"
     "@radix-ui/react-navigation-menu" "^1.2.1"
     "@radix-ui/react-slot" "^1.1.0"
@@ -2663,7 +2676,7 @@ source-map-js@^1.0.2, source-map-js@^1.2.1:
     next "14.2.10"
     react "^18"
     react-dom "^18"
-    stockly "file:../../Users/f-mat/AppData/Local/Yarn/Cache/v6/npm-stockly-0.1.0-2cda7b02-abf2-4e31-a3df-9c99bbdf92c3-1729549351307/node_modules/stockly"
+    stockly "file:../../Users/f-mat/AppData/Local/Yarn/Cache/v6/npm-stockly-0.1.0-0cff4a68-c593-4d74-9f9b-70853cf1ea40-1729552199230/node_modules/stockly"
     tailwind-merge "^2.5.4"
     tailwindcss-animate "^1.0.7"
 
