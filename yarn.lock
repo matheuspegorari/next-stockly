@@ -2604,6 +2604,11 @@ semver@^7.5.4, semver@^7.6.3:
   resolved "https://registry.npmjs.org/semver/-/semver-7.6.3.tgz"
   integrity sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A==
 
+server-only@0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/server-only/-/server-only-0.0.1.tgz#0f366bb6afb618c37c9255a314535dc412cd1c9e"
+  integrity sha512-qepMx2JxAa5jjfzxG79yPPq+8BuFToHd1hm7kI+Z4zAq1ftQiP7HcxMhDDItrbtwVeLg/cY2JnKnrcFkmiswNA==
+
 set-function-length@^1.2.1:
   version "1.2.2"
   resolved "https://registry.npmjs.org/set-function-length/-/set-function-length-1.2.2.tgz"
@@ -2670,13 +2675,14 @@ source-map-js@^1.0.2, source-map-js@^1.2.1:
     "@radix-ui/react-accordion" "^1.2.1"
     "@radix-ui/react-navigation-menu" "^1.2.1"
     "@radix-ui/react-slot" "^1.1.0"
+    "@tanstack/react-table" "^8.20.5"
     class-variance-authority "^0.7.0"
     clsx "^2.1.1"
     lucide-react "^0.453.0"
     next "14.2.10"
     react "^18"
     react-dom "^18"
-    stockly "file:../../Users/f-mat/AppData/Local/Yarn/Cache/v6/npm-stockly-0.1.0-0cff4a68-c593-4d74-9f9b-70853cf1ea40-1729552199230/node_modules/stockly"
+    stockly "file:../../Users/f-mat/AppData/Local/Yarn/Cache/v6/npm-stockly-0.1.0-4e76192f-0676-4696-a2db-09218fba6a36-1729560849083/node_modules/stockly"
     tailwind-merge "^2.5.4"
     tailwindcss-animate "^1.0.7"
 
