@@ -1,5 +1,5 @@
 "use client";
-import { Input } from "@/app/_components/input";
+import { Input } from "@/app/_components/ui/input";
 import { Button } from "@/app/_components/ui/button";
 import {
   Dialog,
