@@ -22,6 +22,6 @@ export const getProducts = async (): Promise<ProductDto[]> => {
 
 export const cachedGetProducts = unstable_cache(
   async () => getProducts(),
-  ['get-products'],
-  { revalidate: 120 }
+  ["get-products"],
+  { revalidate: 120 },
 );
