@@ -4,10 +4,12 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/app/_components/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+} from "@/app/_components/ui/alert-dialog";
 import { Badge } from "@/app/_components/ui/badge";
 import { Button } from "@/app/_components/ui/button";
 import { ProductDto } from "@/app/_data-access/product/get-products";
@@ -19,6 +21,7 @@ import {
   MoreHorizontal,
   TrashIcon,
 } from "lucide-react";
+import DeleteProductDialogContent from "./delete-dialog-content";
 
 const getStatusLabel = (status: string) => {
   if (status === "IN_STOCK") {
@@ -73,28 +76,37 @@ export const productTableColumns: ColumnDef<ProductDto>[] = [
       const product = row.row.original;
       return (
         <>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant={"ghost"}>
-                <MoreHorizontal size={24} className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              
-              <DropdownMenuItem
-                className="gap-1.5"
-                onClick={() => navigator.clipboard.writeText(product.id)}
-              >
-                <ClipboardCopyIcon />
-                Copiar ID
-              </DropdownMenuItem>
-              <DropdownMenuItem className="gap-1.5">
-                <EditIcon />
-                Editar
-              </DropdownMenuItem>
-              <DropdownMenuItem className="gap-1.5"><TrashIcon />Deletar</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <AlertDialog>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant={"ghost"}>
+                  <MoreHorizontal size={24} className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem
+                  className="gap-1.5"
+                  onClick={() => navigator.clipboard.writeText(product.id)}
+                >
+                  <ClipboardCopyIcon />
+                  Copiar ID
+                </DropdownMenuItem>
+                <DropdownMenuItem className="gap-1.5">
+                  <EditIcon />
+                  Editar
+                </DropdownMenuItem>
+                <AlertDialogTrigger>
+                  <DropdownMenuItem className="gap-1.5">
+                    {/* ALERT DIALOG */}
+                    <TrashIcon />
+                    Deletar
+                    {/* ALERT DIALOG */}
+                  </DropdownMenuItem>
+                </AlertDialogTrigger>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <DeleteProductDialogContent productId={product.id} />
+          </AlertDialog>
         </>
       );
     },

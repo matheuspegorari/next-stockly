@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Sidebar from "./_components/sidebar";
 import "./globals.css";
+import { Toaster } from "./_components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"], display: "auto" });
 
@@ -22,6 +23,7 @@ export default function RootLayout({
           <Sidebar />
           {children}
         </div>
+        <Toaster/>
       </body>
     </html>
   );
