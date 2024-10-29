@@ -18,9 +18,9 @@ import {
   TrashIcon,
 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import DeleteProductDialogContent from "./delete-dialog-content";
 import UpsertProductDialogContent from "./upsert-dialog-content";
-import { toast } from "sonner";
 
 interface ProductTableDropdownMenuProps {
   product: ProductDto;
