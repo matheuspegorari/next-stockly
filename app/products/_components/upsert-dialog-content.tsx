@@ -1,8 +1,8 @@
 "use client";
-import { createProduct } from "@/app/_actions/products/create-product";
+import { upsertProduct } from "@/app/_actions/products/create-product";
 import {
-  CreateProductSchemaType,
-  createProductSchema,
+  UpsertProductSchemaType,
+  upsertProductSchema,
 } from "@/app/_actions/products/create-product/schema";
 import { Button } from "@/app/_components/ui/button";
 import {
@@ -28,33 +28,38 @@ import { useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
 
 interface UpsertProductDialogContentProps {
+  defaultValues?: UpsertProductSchemaType;
   onSuccessfulSubmit?: () => void;
 }
 
 const UpsertProductDialogContent = ({
+  defaultValues,
   onSuccessfulSubmit,
 }: UpsertProductDialogContentProps) => {
-  const form = useForm<CreateProductSchemaType>({
+  console.log(defaultValues);
+  const isEditint = !!defaultValues;
+  const form = useForm<UpsertProductSchemaType>({
     shouldUnregister: true,
-    resolver: zodResolver(createProductSchema),
-    defaultValues: { name: "", price: 0, stock: 1 },
+    resolver: zodResolver(upsertProductSchema),
+    defaultValues: defaultValues ?? { name: "", price: 0, stock: 1 },
   });
 
-  const onSubmit = async (data: CreateProductSchemaType) => {
+  const onSubmit = async (data: UpsertProductSchemaType) => {
     try {
-      await createProduct(data);
+      await upsertProduct({...data, id: defaultValues?.id});
       onSuccessfulSubmit?.();
     } catch (error) {
       console.error(error);
     }
     console.log(data);
   };
+  console.log();
   return (
     <DialogContent>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <DialogHeader>
-            <DialogTitle>Criar produto</DialogTitle>
+            <DialogTitle>{isEditint ? "Editar" : "Novo"} produto</DialogTitle>
             <DialogDescription>Insira as informações abaixo</DialogDescription>
           </DialogHeader>
           <FormField

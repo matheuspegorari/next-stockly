@@ -22,6 +22,9 @@ import {
   TrashIcon,
 } from "lucide-react";
 import DeleteProductDialogContent from "./delete-dialog-content";
+import { Dialog, DialogTrigger } from "@/app/_components/ui/dialog";
+import UpsertProductDialogContent from "./upsert-dialog-content";
+import { useState } from "react";
 
 const getStatusLabel = (status: string) => {
   if (status === "IN_STOCK") {
@@ -73,10 +76,12 @@ export const productTableColumns: ColumnDef<ProductDto>[] = [
     accessorKey: "actions",
     header: "Ações",
     cell: (row) => {
+      const [editDialogOpen, setEditDialogOpen] = useState(false);
       const product = row.row.original;
       return (
         <>
           <AlertDialog>
+            <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant={"ghost"}>
@@ -91,10 +96,12 @@ export const productTableColumns: ColumnDef<ProductDto>[] = [
                   <ClipboardCopyIcon />
                   Copiar ID
                 </DropdownMenuItem>
+                <DialogTrigger asChild>
                 <DropdownMenuItem className="gap-1.5">
                   <EditIcon />
                   Editar
                 </DropdownMenuItem>
+                </DialogTrigger>
                 <AlertDialogTrigger>
                   <DropdownMenuItem className="gap-1.5">
                     {/* ALERT DIALOG */}
@@ -105,7 +112,16 @@ export const productTableColumns: ColumnDef<ProductDto>[] = [
                 </AlertDialogTrigger>
               </DropdownMenuContent>
             </DropdownMenu>
+            <UpsertProductDialogContent 
+            onSuccessfulSubmit={() => setEditDialogOpen(false)}
+            defaultValues={{
+              id: product.id,
+              name: product.name,
+              price: product.price,
+              stock: product.stock,
+            }} />
             <DeleteProductDialogContent productId={product.id} />
+            </Dialog>
           </AlertDialog>
         </>
       );
