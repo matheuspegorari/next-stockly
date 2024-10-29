@@ -1,30 +1,10 @@
 "use client";
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/app/_components/dropdown-menu";
-import {
-  AlertDialog,
-  AlertDialogTrigger,
-} from "@/app/_components/ui/alert-dialog";
 import { Badge } from "@/app/_components/ui/badge";
-import { Button } from "@/app/_components/ui/button";
 import { ProductDto } from "@/app/_data-access/product/get-products";
 import { ColumnDef } from "@tanstack/react-table";
-import {
-  Circle,
-  ClipboardCopyIcon,
-  EditIcon,
-  MoreHorizontal,
-  TrashIcon,
-} from "lucide-react";
-import DeleteProductDialogContent from "./delete-dialog-content";
-import { Dialog, DialogTrigger } from "@/app/_components/ui/dialog";
-import UpsertProductDialogContent from "./upsert-dialog-content";
-import { useState } from "react";
+import { Circle } from "lucide-react";
+import ProductTableDropdownMenu from "./table-dropdown";
 
 const getStatusLabel = (status: string) => {
   if (status === "IN_STOCK") {
@@ -41,6 +21,13 @@ export const productTableColumns: ColumnDef<ProductDto>[] = [
   {
     accessorKey: "price",
     header: "Vlr. Unitário",
+    cell: (row) => {
+      const product = row.row.original;
+      return Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      }).format(product.price);
+    },
   },
   {
     accessorKey: "stock",
@@ -76,55 +63,8 @@ export const productTableColumns: ColumnDef<ProductDto>[] = [
     accessorKey: "actions",
     header: "Ações",
     cell: (row) => {
-      const [editDialogOpen, setEditDialogOpen] = useState(false);
       const product = row.row.original;
-      return (
-        <>
-          <AlertDialog>
-            <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant={"ghost"}>
-                  <MoreHorizontal size={24} className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem
-                  className="gap-1.5"
-                  onClick={() => navigator.clipboard.writeText(product.id)}
-                >
-                  <ClipboardCopyIcon />
-                  Copiar ID
-                </DropdownMenuItem>
-                <DialogTrigger asChild>
-                <DropdownMenuItem className="gap-1.5">
-                  <EditIcon />
-                  Editar
-                </DropdownMenuItem>
-                </DialogTrigger>
-                <AlertDialogTrigger>
-                  <DropdownMenuItem className="gap-1.5">
-                    {/* ALERT DIALOG */}
-                    <TrashIcon />
-                    Deletar
-                    {/* ALERT DIALOG */}
-                  </DropdownMenuItem>
-                </AlertDialogTrigger>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <UpsertProductDialogContent 
-            onSuccessfulSubmit={() => setEditDialogOpen(false)}
-            defaultValues={{
-              id: product.id,
-              name: product.name,
-              price: product.price,
-              stock: product.stock,
-            }} />
-            <DeleteProductDialogContent productId={product.id} />
-            </Dialog>
-          </AlertDialog>
-        </>
-      );
+      return <ProductTableDropdownMenu product={product} />;
     },
   },
 ];
