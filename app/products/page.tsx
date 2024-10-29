@@ -1,10 +1,9 @@
 import { DataTable } from "../_components/ui/data-table";
-import { cachedGetProducts, cachedGetRandomNumber } from "../_data-access/product/get-products";
+import { cachedGetProducts } from "../_data-access/product/get-products";
 import AddProductButton from "./_components/add-product-button";
 import { productTableColumns } from "./_components/table-columns";
 
 const Products = async () => {
-  const randomNumber = await cachedGetRandomNumber();
   const products = await cachedGetProducts();
   return (
     <div className="ml-8 mr-8 mt-8 w-full space-y-8 rounded bg-white p-8 shadow-md">
@@ -16,7 +15,6 @@ const Products = async () => {
           <h2 className="text-xl font-semibold">Produtos</h2>
         </div>
         <AddProductButton />
-        {randomNumber}
       </div>
       <DataTable
         columns={productTableColumns}
