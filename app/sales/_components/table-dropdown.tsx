@@ -37,7 +37,10 @@ const SalesTableDropdownMenu = ({
             <ClipboardCopyIcon />
             Copiar ID
           </DropdownMenuItem>
-          <DropdownMenuItem className="gap-1.5" onClick={() => onDelete(product.id)}>
+          <DropdownMenuItem
+            className="gap-1.5"
+            onClick={() => onDelete(product.id)}
+          >
             <TrashIcon />
             Deletar
           </DropdownMenuItem>
