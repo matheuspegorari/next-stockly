@@ -54,9 +54,10 @@ const UpsertProductDialogContent = ({
     defaultValues: defaultValues ?? { name: "", price: 0, stock: 1 },
   });
 
-  const onSubmit = async (data: UpsertProductSchemaType) =>
-    executeUpsertProduct(data);
-  console.log();
+  const onSubmit = async (data: UpsertProductSchemaType) => {
+    executeUpsertProduct({...data, id: defaultValues?.id});
+  };
+
   return (
     <DialogContent>
       <Form {...form}>
