@@ -32,6 +32,8 @@ import { ProductDto } from "@/app/_data-access/product/get-products";
 import { formatCurrency } from "@/app/_helpers/currency";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, PlusIcon } from "lucide-react";
+import { flattenValidationErrors } from "next-safe-action";
+import { useAction } from "next-safe-action/hooks";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -59,6 +61,17 @@ const UpsertSalesSheetContent = ({
   productOptions,
   onSubmitSuccess,
 }: UpsertSalesSheetContentProps) => {
+  const { execute: executeCreateSale } = useAction(createSale, {
+    onError: ({ error: { validationErrors, serverError } }) => {
+      const flattenedErrors = flattenValidationErrors(validationErrors);
+      toast.error(serverError ?? flattenedErrors.formErrors[0]);
+    },
+    onSuccess: () => {
+      toast.success("Venda realizada com sucesso");
+      onSubmitSuccess();
+    },
+  });
+
   const [selectedProducts, setSelectedProducts] = useState<SelectedProducts[]>(
     [],
   );
@@ -132,19 +145,12 @@ const UpsertSalesSheetContent = ({
   };
 
   const onSubmitSale = async () => {
-    try {
-      await createSale({
-        products: selectedProducts.map((product) => ({
-          id: product.id,
-          quantity: product.quantity,
-        })),
-      });
-      toast.success("Venda realizada com sucesso");
-      onSubmitSuccess();
-    } catch (error) {
-      console.error(error);
-      toast.error("Erro ao realizar a venda");
-    }
+    executeCreateSale({
+      products: selectedProducts.map((product) => ({
+        id: product.id,
+        quantity: product.quantity,
+      })),
+    });
   };
 
   return (
