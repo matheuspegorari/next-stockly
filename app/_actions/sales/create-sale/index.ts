@@ -8,7 +8,6 @@ import { createSaleSchema } from "./schema";
 export const createSale = actionClient
   .schema(createSaleSchema)
   .action(async ({ parsedInput: { products } }) => {
-    throw new Error();
     await db.$transaction(async (tx) => {
       const sale = await tx.sale.create({
         // cria a venda
