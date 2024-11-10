@@ -9,7 +9,6 @@ export const upsertProductSchema = z.object({
   stock: z.coerce
     .number()
     .int()
-    .positive("Quantidade em estoque deve ser positiva."),
 });
 
 export type UpsertProductSchemaType = z.infer<typeof upsertProductSchema>;

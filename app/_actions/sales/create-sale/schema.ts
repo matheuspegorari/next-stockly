@@ -1,4 +1,3 @@
-import { LucideClipboardType } from "lucide-react";
 import { z } from "zod";
 
 export const createSaleSchema = z.object({
