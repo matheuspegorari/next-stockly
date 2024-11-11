@@ -32,7 +32,7 @@ export const saleTableColumns: ColumnDef<SaleDto>[] = [
   },
   {
     header: "Ações",
-    cell: ({ row }) => (
+    cell: ({}) => (
       <Button>
         <MoreHorizontalIcon />
       </Button>

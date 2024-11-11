@@ -9,7 +9,7 @@ const SalesPage = async () => {
   const sales = await getSales();
   const products = await getProducts();
   const productOptions: ComboboxOption[] = products.map(
-    (product: { id: any; name: any }) => ({
+    (product: { id: string; name: string }) => ({
       value: product.id,
       label: product.name,
     }),
@@ -26,10 +26,7 @@ const SalesPage = async () => {
         </div>
         <CreateSaleButton products={products} productOptions={productOptions} />
       </div>
-      <DataTable
-            columns={saleTableColumns}
-            data={sales}
-          />
+      <DataTable columns={saleTableColumns} data={sales} />
     </div>
   );
 };
