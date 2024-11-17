@@ -14,7 +14,7 @@ interface SalesTableDropdownMenuProps {
   onDelete: (productId: string) => void;
 }
 
-const SalesTableDropdownMenu = ({
+const UpsertSalesTableDropdownMenu = ({
   product,
   onDelete,
 }: SalesTableDropdownMenuProps) => {
@@ -50,4 +50,4 @@ const SalesTableDropdownMenu = ({
   );
 };
 
-export default SalesTableDropdownMenu;
+export default UpsertSalesTableDropdownMenu;

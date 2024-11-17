@@ -38,7 +38,7 @@ import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import SalesTableDropdownMenu from "./table-dropdown";
+import UpsertSalesTableDropdownMenu from "./upsert-table-dropdown";
 
 const formSchema = z.object({
   productId: z.string().uuid({ message: "Produto é obrigatório" }),
@@ -52,9 +52,9 @@ interface UpsertSalesSheetContentProps {
   onSubmitSuccess: () => void;
 }
 
-interface SelectedProducts extends ProductDto {
+type SelectedProducts = ProductDto & {
   quantity: number;
-}
+};
 
 const UpsertSalesSheetContent = ({
   products,
@@ -226,7 +226,10 @@ const UpsertSalesSheetContent = ({
                 {formatCurrency(product.price * product.quantity)}
               </TableCell>
               <TableCell>
-                <SalesTableDropdownMenu product={product} onDelete={onDelete} />
+                <UpsertSalesTableDropdownMenu
+                  product={product}
+                  onDelete={onDelete}
+                />
               </TableCell>
             </TableRow>
           ))}
