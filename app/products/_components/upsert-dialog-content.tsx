@@ -1,9 +1,9 @@
 "use client";
-import { upsertProduct } from "@/app/_actions/products/create-product";
+import { upsertProduct } from "@/app/_actions/products/upsert-product";
 import {
   UpsertProductSchemaType,
   upsertProductSchema,
-} from "@/app/_actions/products/create-product/schema";
+} from "@/app/_actions/products/upsert-product/schema";
 import { Button } from "@/app/_components/ui/button";
 import {
   DialogClose,
