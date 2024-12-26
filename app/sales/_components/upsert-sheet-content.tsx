@@ -68,21 +68,20 @@ const UpsertSalesSheetContent = ({
   productOptions,
   onSubmitSuccess,
 }: UpsertSalesSheetContentProps) => {
-  const { execute: executeCreateSale } = useAction(createSale, {
-    onError: ({ error: { validationErrors, serverError } }) => {
-      const flattenedErrors = flattenValidationErrors(validationErrors);
-      toast.error(serverError ?? flattenedErrors.formErrors[0]);
-    },
+  const { execute: executeCreateSale } = useAction(createSale, {    
     onExecute: () => {
-      setIsCreatingSale(true); // Set loading state
+      setIsCreatingSale(true);
       toast.info("Criando venda...");
     },
     onSuccess: () => {
-      setIsCreatingSale(false); // Reset loading state
-      setSelectedProducts([]); // Clear selected products
+      setIsCreatingSale(false);
+      setSelectedProducts([]);
       toast.success("Venda realizada com sucesso");
-
       onSubmitSuccess();
+    },
+    onError: ({ error: { validationErrors, serverError } }) => {
+      const flattenedErrors = flattenValidationErrors(validationErrors);
+      toast.error(serverError ?? flattenedErrors.formErrors[0]);
     },
   });
 
