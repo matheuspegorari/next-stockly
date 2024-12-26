@@ -31,7 +31,7 @@ import {
 import { ProductDto } from "@/app/_data-access/product/get-products";
 import { formatCurrency } from "@/app/_helpers/currency";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, PlusIcon } from "lucide-react";
+import { Check, LoaderCircle, PlusIcon } from "lucide-react";
 import { flattenValidationErrors } from "next-safe-action";
 import { useAction } from "next-safe-action/hooks";
 import { useMemo, useState } from "react";
@@ -66,8 +66,15 @@ const UpsertSalesSheetContent = ({
       const flattenedErrors = flattenValidationErrors(validationErrors);
       toast.error(serverError ?? flattenedErrors.formErrors[0]);
     },
+    onExecute: () => {
+      setIsCreatingSale(true); // Set loading state
+      toast.info("Criando venda...");
+    },
     onSuccess: () => {
+      setIsCreatingSale(false); // Reset loading state
+      setSelectedProducts([]) // Clear selected products
       toast.success("Venda realizada com sucesso");
+
       onSubmitSuccess();
     },
   });
@@ -131,6 +138,8 @@ const UpsertSalesSheetContent = ({
     });
   };
 
+  const [isCreatingSale, setIsCreatingSale] = useState(false);
+
   const productsTotal = useMemo(() => {
     return selectedProducts.reduce(
       (total, product) => total + product.price * product.quantity,
@@ -145,7 +154,9 @@ const UpsertSalesSheetContent = ({
   };
 
   const onSubmitSale = async () => {
-    executeCreateSale({
+    if (isCreatingSale) return;
+
+    await executeCreateSale({
       products: selectedProducts.map((product) => ({
         id: product.id,
         quantity: product.quantity,
@@ -243,13 +254,13 @@ const UpsertSalesSheetContent = ({
         </TableFooter>
       </Table>
       <SheetFooter className="pt-6">
-        <Button
-          className="w-full gap-2"
-          disabled={selectedProducts.length === 0}
+        <Button 
+          className="w-full gap-2 animate-bounce"
+          disabled={selectedProducts.length === 0 || isCreatingSale} // Disable button if there are no products or if it's creating a sale
           onClick={onSubmitSale}
         >
-          <Check />
-          Finalizar venda
+          {isCreatingSale ? <LoaderCircle className="animate-spin" /> : <Check />}
+          {isCreatingSale ? "Realizando venda..." : "Finalizar venda"}
         </Button>
       </SheetFooter>
     </SheetContent>
