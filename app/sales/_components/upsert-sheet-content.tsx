@@ -56,6 +56,13 @@ type SelectedProducts = ProductDto & {
   quantity: number;
 };
 
+const isQuantityExceedStock = (
+  desiredQuantity: number,
+  availableStock: number,
+) => {
+  return desiredQuantity > availableStock;
+};
+
 const UpsertSalesSheetContent = ({
   products,
   productOptions,
@@ -72,7 +79,7 @@ const UpsertSalesSheetContent = ({
     },
     onSuccess: () => {
       setIsCreatingSale(false); // Reset loading state
-      setSelectedProducts([]) // Clear selected products
+      setSelectedProducts([]); // Clear selected products
       toast.success("Venda realizada com sucesso");
 
       onSubmitSuccess();
@@ -100,9 +107,8 @@ const UpsertSalesSheetContent = ({
         (product) => product.id === selectedProduct.id,
       );
       if (existingProduct) {
-        const productIsOutOfStock =
-          existingProduct.quantity + data.quantity > selectedProduct.stock;
-        if (productIsOutOfStock) {
+        const newQuantity = existingProduct.quantity + data.quantity;
+        if (isQuantityExceedStock(newQuantity, selectedProduct.stock)) {
           form.setError("quantity", {
             message: "Quantidade indisponível em estoque.",
           });
@@ -119,8 +125,7 @@ const UpsertSalesSheetContent = ({
           return product;
         });
       }
-      const productIsOutOfStock = data.quantity > selectedProduct.stock;
-      if (productIsOutOfStock) {
+      if (isQuantityExceedStock(data.quantity, selectedProduct.stock)) {
         form.setError("quantity", {
           message: "Quantidade indisponível em estoque.",
         });
@@ -254,12 +259,16 @@ const UpsertSalesSheetContent = ({
         </TableFooter>
       </Table>
       <SheetFooter className="pt-6">
-        <Button 
-          className="w-full gap-2 animate-bounce"
+        <Button
+          className="w-full gap-2"
           disabled={selectedProducts.length === 0 || isCreatingSale} // Disable button if there are no products or if it's creating a sale
           onClick={onSubmitSale}
         >
-          {isCreatingSale ? <LoaderCircle className="animate-spin" /> : <Check />}
+          {isCreatingSale ? (
+            <LoaderCircle className="animate-spin" />
+          ) : (
+            <Check />
+          )}
           {isCreatingSale ? "Realizando venda..." : "Finalizar venda"}
         </Button>
       </SheetFooter>
