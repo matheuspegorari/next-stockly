@@ -11,7 +11,7 @@ export interface ProductDto extends Omit<Product, "price"> {
   status: ProductStatusDto;
 }
 
-export const getProducts = async (): Promise<ProductDto[]> => {
+const getProducts = async (): Promise<ProductDto[]> => {
   const products = await db.product.findMany({});
   return products.map((product) => ({
     ...product,
