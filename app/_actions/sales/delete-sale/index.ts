@@ -7,10 +7,36 @@ import { deleteSaleSchema } from "./schema";
 export const deleteSale = actionClient
   .schema(deleteSaleSchema)
   .action(async ({ parsedInput: { id } }) => {
-    await db.sale.delete({
-      where: {
-        id,
-      },
+    await db.$transaction(async (tx) => {
+      const sale = await tx.sale.findUnique({
+        where: {
+          id,
+        },
+        include: {
+          saleProducts: true,
+        },
+      });
+      if (!sale) {
+        return;
+      }
+      await tx.sale.delete({
+        where: {
+          id,
+        },
+      });
+      for (const product of sale.saleProducts) {
+        await tx.product.update({
+          where: {
+            id: product.productId,
+          },
+          data: {
+            stock: {
+              increment: product.quantity,
+            },
+          },
+        });
+      }
     });
+
     revalidatePath("/sales");
   });
