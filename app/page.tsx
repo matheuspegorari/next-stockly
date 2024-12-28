@@ -1,10 +1,8 @@
 import Header, {
   HeaderLeft,
-  HeaderRight,
   HeaderSubtitle,
   HeaderTitle,
 } from "@/app/_components/header";
-import { Button } from "@/app/_components/ui/button";
 
 const Home = () => {
   return (
@@ -13,7 +11,7 @@ const Home = () => {
         <HeaderLeft>
           <HeaderSubtitle>Visão geral</HeaderSubtitle>
           <HeaderTitle>Dashboards</HeaderTitle>
-        </HeaderLeft>        
+        </HeaderLeft>
       </Header>
     </div>
   );
