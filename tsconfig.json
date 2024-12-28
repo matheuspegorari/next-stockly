@@ -23,8 +23,12 @@
       "@/app/_components/*": ["./app/_components/*"],
       "@/app/_lib/*": ["./app/_lib/*"],
       "@/app/_hooks/*": ["./app/_hooks/*"]
-  }
-},
+    },
+    "tsBuildInfoFile": ".tsbuildinfo",
+    "typeRoots": ["./node_modules/@types"],
+    "forceConsistentCasingInFileNames": true,
+    "assumeChangesOnlyAffectDirectDependencies": true
+  },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }
