@@ -1,3 +1,4 @@
+import { ProductStatusDto } from "@/app/_data-access/product/get-products";
 import { db } from "@/app/_lib/prisma";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
@@ -9,6 +10,15 @@ export interface DayTotalRevenue {
   day: string;
   totalRevenue: number;
 }
+
+export interface MostSoldProductsDto {
+  productId: string;
+  name: string;
+  totalSold: number;
+  price: number;
+  status: ProductStatusDto;
+}
+
 interface DashboardDto {
   totalRevenue: number;
   todayRevenue: number;
@@ -16,6 +26,7 @@ interface DashboardDto {
   totalStock: number;
   totalProducts: number;
   totalLast14DaysRevenue: DayTotalRevenue[];
+  mostSoldProducts: MostSoldProductsDto[];
 }
 
 dayjs.extend(utc);
@@ -23,28 +34,28 @@ dayjs.extend(timezone);
 
 export const getDashboard = async (): Promise<DashboardDto> => {
   const today = dayjs().endOf("day").tz("America/Sao_Paulo");
-const last14Days = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map(
-  (day) => {
-    return today.subtract(day, "day").toDate();
-  },
-);
+  const last14Days = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map(
+    (day) => {
+      return today.subtract(day, "day").toDate();
+    },
+  );
 
-const totalLast14DaysRevenue: DayTotalRevenue[] = [];
+  const totalLast14DaysRevenue: DayTotalRevenue[] = [];
 
-for (const day of last14Days) {
-  const totalRevenue = await db.$queryRaw<[{ total: number | null }]>`
+  for (const day of last14Days) {
+    const totalRevenue = await db.$queryRaw<[{ total: number | null }]>`
     SELECT COALESCE(SUM(sp.quantity * sp."unitPrice"), 0) as total 
     FROM "SaleProduct" sp
     INNER JOIN "Sale" s ON s.id = sp."saleId"
     WHERE DATE(s.date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo') = 
           DATE(${dayjs(day).tz("America/Sao_Paulo").format("YYYY-MM-DD")})
   `;
-  
-  totalLast14DaysRevenue.push({
-    day: dayjs(day).tz("America/Sao_Paulo").format("DD/MM"),
-    totalRevenue: Number(totalRevenue[0].total || 0),
-  });
-}
+
+    totalLast14DaysRevenue.push({
+      day: dayjs(day).tz("America/Sao_Paulo").format("DD/MM"),
+      totalRevenue: Number(totalRevenue[0].total || 0),
+    });
+  }
 
   const totalRevenuePromise = db.$queryRaw<[{ total: number }]>`
   SELECT SUM(quantity * "unitPrice") as total 
@@ -68,14 +79,39 @@ for (const day of last14Days) {
 
   const totalProductsPromise = db.product.count();
 
-  const [totalRevenue, todayRevenue, totalSales, totalStock, totalProducts] =
-    await Promise.all([
-      totalRevenuePromise,
-      todayRevenuePromise,
-      totalSalesPromise,
-      totalStockPromise,
-      totalProductsPromise,
-    ]);
+  const mostSoldProductsQuery = `
+    SELECT P."id", P."name", p.price, sum(sp.quantity) AS "totalSold", p.stock  FROM "SaleProduct" sp
+    INNER JOIN "Product" p ON P.id = SP."productId"
+    GROUP BY P."id", p.name, p.price, p.stock 
+    ORDER BY "totalSold" DESC
+    LIMIT 5
+  `;
+
+  const mostSoldProductsPromise = await db.$queryRawUnsafe<
+    {
+      productId: string;
+      name: string;
+      price: number;
+      totalSold: number;
+      stock: number;
+    }[]
+  >(mostSoldProductsQuery);
+
+  const [
+    totalRevenue,
+    todayRevenue,
+    totalSales,
+    totalStock,
+    totalProducts,
+    mostSoldProducts,
+  ] = await Promise.all([
+    totalRevenuePromise,
+    todayRevenuePromise,
+    totalSalesPromise,
+    totalStockPromise,
+    totalProductsPromise,
+    mostSoldProductsPromise,
+  ]);
   return {
     totalRevenue: Number(totalRevenue[0].total),
     todayRevenue: Number(todayRevenue[0].total),
@@ -83,5 +119,11 @@ for (const day of last14Days) {
     totalStock: Number(totalStock._sum.stock),
     totalProducts,
     totalLast14DaysRevenue,
+    mostSoldProducts: mostSoldProducts.map((product) => ({
+      ...product,
+      totalSold: Number(product.totalSold),
+      price: Number(product.price),
+      status: product.stock > 0 ? "IN_STOCK" : "OUT_OF_STOCK",
+    })),
   };
 };

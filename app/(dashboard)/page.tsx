@@ -1,3 +1,4 @@
+import MostSoldProductItem from "@/app/(dashboard)/_components/most-sold-products";
 import RevenueChart from "@/app/(dashboard)/_components/revenue-chart";
 import SummaryCard, {
   SummaryCardIcon,
@@ -30,7 +31,9 @@ const Home = async () => {
     totalStock,
     totalProducts,
     totalLast14DaysRevenue,
+    mostSoldProducts,
   } = await getDashboard();
+  console.log(mostSoldProducts);
   return (
     <div className="ml-8 mr-8 mt-8 flex w-full flex-col space-y-8 rounded p-8">
       <Header>
@@ -80,10 +83,22 @@ const Home = async () => {
         </SummaryCard>
       </div>
 
-      <div className="flex h-full flex-col overflow-hidden rounded-xl bg-white p-6">
-        <p className="text-lg font-semibold text-slate-900">Receita</p>
-        <p className="text-sm text-slate-400">Últimos 14 dias</p>
-        <RevenueChart data={totalLast14DaysRevenue.reverse()} />
+      <div className="grid min-h-0 grid-cols-[minmax(0,2.5fr),minmax(0,1fr)] gap-6">
+        <div className="flex h-full flex-col overflow-hidden rounded-xl bg-white p-6">
+          <p className="text-lg font-semibold text-slate-900">Receita</p>
+          <p className="text-sm text-slate-400">Últimos 14 dias</p>
+          <RevenueChart data={totalLast14DaysRevenue.reverse()} />
+        </div>
+        <div className="flex h-full flex-col overflow-hidden rounded-xl bg-white p-6">
+          <p className="py-6 text-lg font-semibold text-slate-900">
+            Produtos mais vendidos
+          </p>
+          <div className="space-y-7 overflow-y-auto px-6">
+            {mostSoldProducts.map((product) => (
+              <MostSoldProductItem key={product.productId} product={product} />
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
