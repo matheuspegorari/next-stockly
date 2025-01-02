@@ -80,7 +80,7 @@ export const getDashboard = async (): Promise<DashboardDto> => {
   const totalProductsPromise = db.product.count();
 
   const mostSoldProductsQuery = `
-    SELECT P."id", P."name", p.price, sum(sp.quantity) AS "totalSold", p.stock  FROM "SaleProduct" sp
+    SELECT P."id" as "productId", P."name", p.price, sum(sp.quantity) AS "totalSold", p.stock  FROM "SaleProduct" sp
     INNER JOIN "Product" p ON P.id = SP."productId"
     GROUP BY P."id", p.name, p.price, p.stock 
     ORDER BY "totalSold" DESC
