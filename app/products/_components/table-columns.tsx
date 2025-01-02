@@ -1,11 +1,9 @@
 "use client";
 
-import { Badge } from "@/app/_components/ui/badge";
+import ProductStatusBadge from "@/app/_components/product-status-badge";
 import { ProductDto } from "@/app/_data-access/product/get-products";
 import { ColumnDef } from "@tanstack/react-table";
-import { Circle } from "lucide-react";
 import ProductTableDropdownMenu from "./table-dropdown";
-import ProductStatusBadge from "@/app/_components/product-status-badge";
 
 export const productTableColumns: ColumnDef<ProductDto>[] = [
   {

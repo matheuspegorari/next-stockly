@@ -1,6 +1,5 @@
 import { Badge } from "@/app/_components/ui/badge";
 import { ProductStatusDto } from "@/app/_data-access/product/get-products";
-import { Circle } from "lucide-react";
 
 interface ProductStatusBadgeProps {
   status: ProductStatusDto;
@@ -13,7 +12,6 @@ const ProductStatusBadge = ({ status }: ProductStatusBadgeProps) => {
       variant={status === "IN_STOCK" ? "default" : "destructive"}
       className="gap-2"
     >
-      
       {label}
     </Badge>
   );

@@ -19,10 +19,6 @@ import {
   ShoppingBasket,
 } from "lucide-react";
 
-function log(data: any) {
-  console.log(data);
-  return "";
-}
 const Home = async () => {
   const {
     totalRevenue,
@@ -33,7 +29,7 @@ const Home = async () => {
     totalLast14DaysRevenue,
     mostSoldProducts,
   } = await getDashboard();
-  console.log(mostSoldProducts);
+  
   return (
     <div className="ml-8 mr-8 mt-8 flex w-full flex-col space-y-8 rounded p-8">
       <Header>
