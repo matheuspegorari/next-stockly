@@ -1,3 +1,4 @@
+import RevenueChart from "@/app/(dashboard)/_components/revenue-chart";
 import SummaryCard, {
   SummaryCardIcon,
   SummaryCardTitle,
@@ -10,12 +11,28 @@ import Header, {
 } from "@/app/_components/header";
 import { getDashboard } from "@/app/_data-access/dashboard/get-dashboard";
 import { formatCurrency } from "@/app/_helpers/currency";
-import { CircleDollarSign, DollarSign, Package, ShoppingBasket } from "lucide-react";
+import {
+  CircleDollarSign,
+  DollarSign,
+  Package,
+  ShoppingBasket,
+} from "lucide-react";
 
+function log(data: any) {
+  console.log(data);
+  return "";
+}
 const Home = async () => {
-  const { totalRevenue, todayRevenue, totalSales, totalStock, totalProducts } = await getDashboard();
+  const {
+    totalRevenue,
+    todayRevenue,
+    totalSales,
+    totalStock,
+    totalProducts,
+    totalLast14DaysRevenue,
+  } = await getDashboard();
   return (
-    <div className="ml-8 mr-8 mt-8 w-full space-y-8 rounded p-8">
+    <div className="ml-8 mr-8 mt-8 flex w-full flex-col space-y-8 rounded p-8">
       <Header>
         <HeaderLeft>
           <HeaderSubtitle>Visão geral</HeaderSubtitle>
@@ -31,37 +48,43 @@ const Home = async () => {
           <SummaryCardValue>{formatCurrency(totalRevenue)}</SummaryCardValue>
         </SummaryCard>
         <SummaryCard>
-            <SummaryCardIcon>
-              <DollarSign />
-            </SummaryCardIcon>
-            <SummaryCardTitle>Receita Hoje</SummaryCardTitle>
-            <SummaryCardValue>{formatCurrency(todayRevenue)}</SummaryCardValue>
-          </SummaryCard>
+          <SummaryCardIcon>
+            <DollarSign />
+          </SummaryCardIcon>
+          <SummaryCardTitle>Receita Hoje</SummaryCardTitle>
+          <SummaryCardValue>{formatCurrency(todayRevenue)}</SummaryCardValue>
+        </SummaryCard>
       </div>
 
       <div className="grid grid-cols-3 gap-6">
-          <SummaryCard>
-            <SummaryCardIcon>
-              <CircleDollarSign />
-            </SummaryCardIcon>
-            <SummaryCardTitle>Vendas Totais</SummaryCardTitle>
-            <SummaryCardValue>{totalSales}</SummaryCardValue>
-          </SummaryCard>
-          <SummaryCard>
-            <SummaryCardIcon>
-              <Package />
-            </SummaryCardIcon>
-            <SummaryCardTitle>Total em Estoque</SummaryCardTitle>
-            <SummaryCardValue>{totalStock}</SummaryCardValue>
-          </SummaryCard>
-          <SummaryCard>
-            <SummaryCardIcon>
-              <ShoppingBasket />
-            </SummaryCardIcon>
-            <SummaryCardTitle>Produtos</SummaryCardTitle>
-            <SummaryCardValue>{totalProducts}</SummaryCardValue>
-          </SummaryCard>
-        </div>
+        <SummaryCard>
+          <SummaryCardIcon>
+            <CircleDollarSign />
+          </SummaryCardIcon>
+          <SummaryCardTitle>Vendas Totais</SummaryCardTitle>
+          <SummaryCardValue>{totalSales}</SummaryCardValue>
+        </SummaryCard>
+        <SummaryCard>
+          <SummaryCardIcon>
+            <Package />
+          </SummaryCardIcon>
+          <SummaryCardTitle>Total em Estoque</SummaryCardTitle>
+          <SummaryCardValue>{totalStock}</SummaryCardValue>
+        </SummaryCard>
+        <SummaryCard>
+          <SummaryCardIcon>
+            <ShoppingBasket />
+          </SummaryCardIcon>
+          <SummaryCardTitle>Produtos</SummaryCardTitle>
+          <SummaryCardValue>{totalProducts}</SummaryCardValue>
+        </SummaryCard>
+      </div>
+
+      <div className="flex h-full flex-col overflow-hidden rounded-xl bg-white p-6">
+        <p className="text-lg font-semibold text-slate-900">Receita</p>
+        <p className="text-sm text-slate-400">Últimos 14 dias</p>
+        <RevenueChart data={totalLast14DaysRevenue.reverse()} />
+      </div>
     </div>
   );
 };
