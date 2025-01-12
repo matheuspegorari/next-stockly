@@ -20,7 +20,6 @@ export interface MostSoldProductsDto {
 }
 
 interface DashboardDto {
-  todayRevenue: number;
   totalSales: number;
   totalStock: number;
   totalProducts: number;
@@ -56,13 +55,6 @@ export const getDashboard = async (): Promise<DashboardDto> => {
     });
   }
 
-  const todayRevenuePromise = db.$queryRaw<[{ total: number }]>`
-  SELECT SUM(sp.quantity * sp."unitPrice") as total 
-  FROM "SaleProduct" sp
-  INNER JOIN "Sale" s ON s.id = sp."saleId"
-  WHERE DATE(s.date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo') = DATE(${today.format("YYYY-MM-DD")})
-`;
-
   const totalSalesPromise = db.sale.count();
 
   const totalStockPromise = db.product.aggregate({
@@ -92,20 +84,17 @@ export const getDashboard = async (): Promise<DashboardDto> => {
   >(mostSoldProductsQuery);
 
   const [
-    todayRevenue,
     totalSales,
     totalStock,
     totalProducts,
     mostSoldProducts,
   ] = await Promise.all([
-    todayRevenuePromise,
     totalSalesPromise,
     totalStockPromise,
     totalProductsPromise,
     mostSoldProductsPromise,
   ]);
   return {
-    todayRevenue: Number(todayRevenue[0].total),
     totalSales,
     totalStock: Number(totalStock._sum.stock),
     totalProducts,
