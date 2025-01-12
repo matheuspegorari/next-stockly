@@ -3,7 +3,7 @@ import SummaryCard, {
   SummaryCardTitle,
   SummaryCardValue,
 } from "@/app/(dashboard)/_components/summary-card";
-import { getTotalStock } from "@/app/_data-access/dashboard/get-total-sales copy";
+import { getTotalStock } from "@/app/_data-access/dashboard/get-total-stock";
 import { Package } from "lucide-react";
 
 const TotalStockCard = async () => {
