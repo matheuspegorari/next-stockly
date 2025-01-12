@@ -7,6 +7,7 @@ import SummaryCard, {
 } from "@/app/(dashboard)/_components/summary-card";
 import TodayRevenueCard from "@/app/(dashboard)/_components/today-revenue-card";
 import TotalRevenueCard from "@/app/(dashboard)/_components/total-revenue-card";
+import TotalSalesCard from "@/app/(dashboard)/_components/total-sales-card";
 import Header, {
   HeaderLeft,
   HeaderSubtitle,
@@ -14,12 +15,11 @@ import Header, {
 } from "@/app/_components/header";
 import { Skeleton } from "@/app/_components/ui/skeleton";
 import { getDashboard } from "@/app/_data-access/dashboard/get-dashboard";
-import { CircleDollarSign, Package, ShoppingBasket } from "lucide-react";
+import { Package, ShoppingBasket } from "lucide-react";
 import { Suspense } from "react";
 
 const DashboardContent = async () => {
   const {
-    totalSales,
     totalStock,
     totalProducts,
     totalLast14DaysRevenue,
@@ -38,13 +38,7 @@ const DashboardContent = async () => {
       </div>
 
       <div className="grid grid-cols-3 gap-6">
-        <SummaryCard>
-          <SummaryCardIcon>
-            <CircleDollarSign />
-          </SummaryCardIcon>
-          <SummaryCardTitle>Vendas Totais</SummaryCardTitle>
-          <SummaryCardValue>{totalSales}</SummaryCardValue>
-        </SummaryCard>
+        <TotalSalesCard />
         <SummaryCard>
           <SummaryCardIcon>
             <Package />
