@@ -6,7 +6,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/app/_components/ui/chart";
-import { DayTotalRevenue } from "@/app/_data-access/dashboard/get-dashboard";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 const chartConfig: ChartConfig = {
@@ -14,6 +13,11 @@ const chartConfig: ChartConfig = {
     label: "Receita",
   },
 };
+
+interface DayTotalRevenue {
+  day: string;
+  totalRevenue: number;
+}
 
 interface RevenueChartProps {
   data: DayTotalRevenue[];

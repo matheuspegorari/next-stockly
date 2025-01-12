@@ -1,7 +1,14 @@
 import ProductStatusBadge from "@/app/_components/product-status-badge";
-import { MostSoldProductsDto } from "@/app/_data-access/dashboard/get-dashboard";
+import { ProductStatusDto } from "@/app/_data-access/product/get-products";
 import { formatCurrency } from "@/app/_helpers/currency";
 
+export interface MostSoldProductsDto {
+  productId: string;
+  name: string;
+  totalSold: number;
+  price: number;
+  status: ProductStatusDto;
+}
 interface MostSoldProductProps {
   product: MostSoldProductsDto;
 }
@@ -17,7 +24,9 @@ const MostSoldProductItem = ({ product }: MostSoldProductProps) => {
         </p>
       </div>
       <div>
-        <p className="text-sm font-semibold text-right">{product.totalSold} vendas</p>
+        <p className="text-right text-sm font-semibold">
+          {product.totalSold} vendas
+        </p>
       </div>
     </div>
   );

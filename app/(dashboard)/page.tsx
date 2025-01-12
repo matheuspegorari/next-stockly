@@ -1,5 +1,4 @@
-import MostSoldProductItem from "@/app/(dashboard)/_components/most-sold-products";
-import RevenueChart from "@/app/(dashboard)/_components/revenue-chart";
+import RevenueChartCard from "@/app/(dashboard)/_components/revenue-chart-card";
 import TodayRevenueCard from "@/app/(dashboard)/_components/today-revenue-card";
 import TotalProductsCard from "@/app/(dashboard)/_components/total-products-card";
 import TotalRevenueCard from "@/app/(dashboard)/_components/total-revenue-card";
@@ -11,12 +10,9 @@ import Header, {
   HeaderTitle,
 } from "@/app/_components/header";
 import { Skeleton } from "@/app/_components/ui/skeleton";
-import { getDashboard } from "@/app/_data-access/dashboard/get-dashboard";
 import { Suspense } from "react";
 
-const DashboardContent = async () => {
-  const { totalLast14DaysRevenue, mostSoldProducts } = await getDashboard();
-
+const DashboardContent = () => {
   return (
     <>
       <div className="grid grid-cols-2 gap-6">
@@ -39,24 +35,9 @@ const DashboardContent = async () => {
           <TotalProductsCard />
         </Suspense>
       </div>
-
-      <div className="grid min-h-0 grid-cols-[minmax(0,2.5fr),minmax(0,1fr)] gap-6">
-        <div className="flex h-full flex-col overflow-hidden rounded-xl bg-white p-6">
-          <p className="text-lg font-semibold text-slate-900">Receita</p>
-          <p className="text-sm text-slate-400">Últimos 14 dias</p>
-          <RevenueChart data={totalLast14DaysRevenue.reverse()} />
-        </div>
-        <div className="flex h-full flex-col overflow-hidden rounded-xl bg-white p-6">
-          <p className="py-6 text-lg font-semibold text-slate-900">
-            Produtos mais vendidos
-          </p>
-          <div className="space-y-7 overflow-y-auto px-6">
-            {mostSoldProducts.map((product) => (
-              <MostSoldProductItem key={product.productId} product={product} />
-            ))}
-          </div>
-        </div>
-      </div>
+      <Suspense fallback={<Skeleton className="bg-white" />}>
+        <RevenueChartCard />
+      </Suspense>
     </>
   );
 };
