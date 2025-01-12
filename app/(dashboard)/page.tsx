@@ -21,9 +21,8 @@ import {
 } from "lucide-react";
 import { Suspense } from "react";
 
-const Home = async () => {
+const DashboardContent = async () => {
   const {
-    totalRevenue,
     todayRevenue,
     totalSales,
     totalStock,
@@ -33,13 +32,7 @@ const Home = async () => {
   } = await getDashboard();
 
   return (
-    <div className="ml-8 mr-8 mt-8 flex w-full flex-col space-y-8 rounded p-8">
-      <Header>
-        <HeaderLeft>
-          <HeaderSubtitle>Visão geral</HeaderSubtitle>
-          <HeaderTitle>Dashboards</HeaderTitle>
-        </HeaderLeft>
-      </Header>
+    <>
       <div className="grid grid-cols-2 gap-6">
         <Suspense fallback={<div>Carregando...</div>}>
           <TotalRevenueCard />
@@ -94,7 +87,24 @@ const Home = async () => {
           </div>
         </div>
       </div>
+    </>
+  );
+};
+const Home = () => {
+  return (
+    <div className="ml-8 mr-8 mt-8 flex w-full flex-col space-y-8 rounded p-8">
+      <Header>
+        <HeaderLeft>
+          <HeaderSubtitle>Visão geral</HeaderSubtitle>
+          <HeaderTitle>Dashboards</HeaderTitle>
+        </HeaderLeft>
+      </Header>
+      
+      <Suspense fallback={<div>Carregando...</div>}>
+        <DashboardContent />
+      </Suspense>
     </div>
   );
 };
+
 export default Home;
