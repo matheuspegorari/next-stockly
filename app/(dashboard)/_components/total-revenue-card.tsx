@@ -7,7 +7,7 @@ import { getTotalRevenue } from "@/app/_data-access/dashboard/get-total-revenue"
 import { formatCurrency } from "@/app/_helpers/currency";
 import { DollarSign } from "lucide-react";
 
-const TotalRevenueCard = async () => {
+const TotalRevenueCard = async () => {    
   const totalRevenue = await getTotalRevenue();
   return (
     <SummaryCard>

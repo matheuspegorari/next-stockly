@@ -11,6 +11,7 @@ import Header, {
   HeaderSubtitle,
   HeaderTitle,
 } from "@/app/_components/header";
+import { Skeleton } from "@/app/_components/ui/skeleton";
 import { getDashboard } from "@/app/_data-access/dashboard/get-dashboard";
 import { formatCurrency } from "@/app/_helpers/currency";
 import {
@@ -34,7 +35,7 @@ const DashboardContent = async () => {
   return (
     <>
       <div className="grid grid-cols-2 gap-6">
-        <Suspense fallback={<div>Carregando...</div>}>
+        <Suspense fallback={<Skeleton className="bg-white"/>}>
           <TotalRevenueCard />
         </Suspense>
         <SummaryCard>
