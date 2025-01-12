@@ -15,8 +15,7 @@ import { getDashboard } from "@/app/_data-access/dashboard/get-dashboard";
 import { Suspense } from "react";
 
 const DashboardContent = async () => {
-  const { totalProducts, totalLast14DaysRevenue, mostSoldProducts } =
-    await getDashboard();
+  const { totalLast14DaysRevenue, mostSoldProducts } = await getDashboard();
 
   return (
     <>
