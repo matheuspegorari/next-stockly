@@ -5,6 +5,7 @@ import SummaryCard, {
   SummaryCardTitle,
   SummaryCardValue,
 } from "@/app/(dashboard)/_components/summary-card";
+import TotalRevenueCard from "@/app/(dashboard)/_components/total-revenue-card";
 import Header, {
   HeaderLeft,
   HeaderSubtitle,
@@ -18,6 +19,7 @@ import {
   Package,
   ShoppingBasket,
 } from "lucide-react";
+import { Suspense } from "react";
 
 const Home = async () => {
   const {
@@ -29,7 +31,7 @@ const Home = async () => {
     totalLast14DaysRevenue,
     mostSoldProducts,
   } = await getDashboard();
-  
+
   return (
     <div className="ml-8 mr-8 mt-8 flex w-full flex-col space-y-8 rounded p-8">
       <Header>
@@ -39,13 +41,9 @@ const Home = async () => {
         </HeaderLeft>
       </Header>
       <div className="grid grid-cols-2 gap-6">
-        <SummaryCard>
-          <SummaryCardIcon>
-            <DollarSign />
-          </SummaryCardIcon>
-          <SummaryCardTitle>Receita Total</SummaryCardTitle>
-          <SummaryCardValue>{formatCurrency(totalRevenue)}</SummaryCardValue>
-        </SummaryCard>
+        <Suspense fallback={<div>Carregando...</div>}>
+          <TotalRevenueCard />
+        </Suspense>
         <SummaryCard>
           <SummaryCardIcon>
             <DollarSign />
