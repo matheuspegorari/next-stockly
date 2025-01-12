@@ -8,6 +8,7 @@ import SummaryCard, {
 import TodayRevenueCard from "@/app/(dashboard)/_components/today-revenue-card";
 import TotalRevenueCard from "@/app/(dashboard)/_components/total-revenue-card";
 import TotalSalesCard from "@/app/(dashboard)/_components/total-sales-card";
+import TotalStockCard from "@/app/(dashboard)/_components/total-stock-card";
 import Header, {
   HeaderLeft,
   HeaderSubtitle,
@@ -15,16 +16,12 @@ import Header, {
 } from "@/app/_components/header";
 import { Skeleton } from "@/app/_components/ui/skeleton";
 import { getDashboard } from "@/app/_data-access/dashboard/get-dashboard";
-import { Package, ShoppingBasket } from "lucide-react";
+import { ShoppingBasket } from "lucide-react";
 import { Suspense } from "react";
 
 const DashboardContent = async () => {
-  const {
-    totalStock,
-    totalProducts,
-    totalLast14DaysRevenue,
-    mostSoldProducts,
-  } = await getDashboard();
+  const { totalProducts, totalLast14DaysRevenue, mostSoldProducts } =
+    await getDashboard();
 
   return (
     <>
@@ -38,14 +35,12 @@ const DashboardContent = async () => {
       </div>
 
       <div className="grid grid-cols-3 gap-6">
-        <TotalSalesCard />
-        <SummaryCard>
-          <SummaryCardIcon>
-            <Package />
-          </SummaryCardIcon>
-          <SummaryCardTitle>Total em Estoque</SummaryCardTitle>
-          <SummaryCardValue>{totalStock}</SummaryCardValue>
-        </SummaryCard>
+        <Suspense fallback={<Skeleton className="bg-white" />}>
+          <TotalSalesCard />
+        </Suspense>
+        <Suspense fallback={<Skeleton className="bg-white" />}>
+          <TotalStockCard />
+        </Suspense>
         <SummaryCard>
           <SummaryCardIcon>
             <ShoppingBasket />
