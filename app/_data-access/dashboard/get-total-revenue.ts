@@ -1,4 +1,5 @@
 import { db } from "@/app/_lib/prisma";
+import "server-only";
 
 export const getTotalRevenue = async (): Promise<number> => {
   const totalRevenue = await db.$queryRaw<[{ total: number }]>`
