@@ -43,7 +43,7 @@ const DashboardContent = () => {
 };
 const Home = () => {
   return (
-    <div className="ml-8 mr-8 mt-8 flex w-full flex-col space-y-8 rounded p-8">
+    <div className="ml-8 mr-8 mt-8 flex w-full flex-col space-y-8 rounded p-8 overflow-auto">
       <Header>
         <HeaderLeft>
           <HeaderSubtitle>Visão geral</HeaderSubtitle>
