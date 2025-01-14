@@ -1,11 +1,6 @@
+import dayjs from "@/app/_lib/dayjs";
 import { db } from "@/app/_lib/prisma";
-import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
 import "server-only";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 const today = dayjs().endOf("day").tz("America/Sao_Paulo");
 

@@ -1,16 +1,11 @@
 import { db } from "@/app/_lib/prisma";
-import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
+import dayjs from "@/app/_lib/dayjs";
 import "server-only";
 
 export interface DayTotalRevenue {
   day: string;
   totalRevenue: number;
 }
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 export const getChartRevenue = async (): Promise<DayTotalRevenue[]> => {
   const today = dayjs().endOf("day").tz("America/Sao_Paulo");
