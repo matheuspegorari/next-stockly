@@ -1,10 +1,11 @@
 import dayjs from "@/app/_lib/dayjs";
 import { db } from "@/app/_lib/prisma";
+import { unstable_cache } from "next/cache";
 import "server-only";
 
 const today = dayjs().endOf("day").tz("America/Sao_Paulo");
 
-export const getTodayRevenue = async (): Promise<number> => {
+const _getTodayRevenue = async (): Promise<number> => {
   const todayRevenue = await db.$queryRaw<[{ total: number }]>`
     SELECT SUM(sp.quantity * sp."unitPrice") as total 
     FROM "SaleProduct" sp
@@ -14,3 +15,9 @@ export const getTodayRevenue = async (): Promise<number> => {
 
   return Number(todayRevenue[0].total);
 };
+
+export const getTodayRevenue = unstable_cache(
+  async () => _getTodayRevenue(),
+  ["get-dashboard"],
+  { tags: ["get-dashboard"], revalidate: 120 },
+);

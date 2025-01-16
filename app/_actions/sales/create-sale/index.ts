@@ -54,4 +54,5 @@ export const createSale = actionClient
     });
 
     revalidateTag("get-products");
+    revalidateTag("get-dashboard");
   });

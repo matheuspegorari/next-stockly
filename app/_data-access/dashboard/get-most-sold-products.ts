@@ -1,5 +1,6 @@
 import { ProductStatusDto } from "@/app/_data-access/product/get-products";
 import { db } from "@/app/_lib/prisma";
+import { unstable_cache } from "next/cache";
 import "server-only";
 
 export interface MostSoldProductsDto {
@@ -10,7 +11,7 @@ export interface MostSoldProductsDto {
   status: ProductStatusDto;
 }
 
-export const getMostSoldProducts = async (): Promise<MostSoldProductsDto[]> => {
+const _getMostSoldProducts = async (): Promise<MostSoldProductsDto[]> => {
   const mostSoldProductsQuery = `
         SELECT P."id" as "productId", P."name", p.price, sum(sp.quantity) AS "totalSold", p.stock  FROM "SaleProduct" sp
         INNER JOIN "Product" p ON P.id = SP."productId"
@@ -36,3 +37,9 @@ export const getMostSoldProducts = async (): Promise<MostSoldProductsDto[]> => {
     status: product.stock > 0 ? "IN_STOCK" : "OUT_OF_STOCK",
   }));
 };
+
+export const getMostSoldProducts = unstable_cache(
+  async () => _getMostSoldProducts(),
+  ["get-dashboard"],
+  { tags: ["get-dashboard"], revalidate: 120 },
+);

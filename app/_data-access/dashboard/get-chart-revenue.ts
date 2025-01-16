@@ -1,5 +1,6 @@
-import { db } from "@/app/_lib/prisma";
 import dayjs from "@/app/_lib/dayjs";
+import { db } from "@/app/_lib/prisma";
+import { unstable_cache } from "next/cache";
 import "server-only";
 
 export interface DayTotalRevenue {
@@ -7,7 +8,7 @@ export interface DayTotalRevenue {
   totalRevenue: number;
 }
 
-export const getChartRevenue = async (): Promise<DayTotalRevenue[]> => {
+const _getChartRevenue = async (): Promise<DayTotalRevenue[]> => {
   const today = dayjs().endOf("day").tz("America/Sao_Paulo");
   const last14Days = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map(
     (day) => {
@@ -34,3 +35,9 @@ export const getChartRevenue = async (): Promise<DayTotalRevenue[]> => {
 
   return totalLast14DaysRevenue;
 };
+
+export const getChartRevenue = unstable_cache(
+  async () => _getChartRevenue(),
+  ["get-dashboard"],
+  { tags: ["get-dashboard"], revalidate: 120 },
+);

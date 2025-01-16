@@ -14,4 +14,5 @@ export const upsertProduct = actionClient
     });
 
     revalidateTag("get-products");
+    revalidateTag("get-dashboard");
   });

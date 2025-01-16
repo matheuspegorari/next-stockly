@@ -13,4 +13,5 @@ export const deleteProduct = actionClient
       },
     });
     revalidateTag("get-products");
+    revalidateTag("get-dashboard");
   });
