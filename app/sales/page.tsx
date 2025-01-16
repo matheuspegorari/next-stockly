@@ -10,6 +10,7 @@ import { cachedGetProducts } from "../_data-access/product/get-products";
 import { getSales } from "../_data-access/sales/get-sales";
 import CreateSaleButton from "./_components/create-sale-button";
 import { saleTableColumns } from "./_components/table-columns";
+import { Metadata } from "next";
 
 const SalesPage = async () => {
   const sales = await getSales();
@@ -39,5 +40,9 @@ const SalesPage = async () => {
     </div>
   );
 };
+
+export const metadata: Metadata = {
+  title: "Vendas | Stockly",
+}; 
 
 export default SalesPage;

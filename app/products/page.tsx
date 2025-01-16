@@ -8,6 +8,7 @@ import { DataTable } from "../_components/ui/data-table";
 import { cachedGetProducts } from "../_data-access/product/get-products";
 import AddProductButton from "./_components/add-product-button";
 import { productTableColumns } from "./_components/table-columns";
+import { Metadata } from "next";
 
 const Products = async () => {
   const products = await cachedGetProducts();
@@ -29,5 +30,9 @@ const Products = async () => {
     </div>
   );
 };
+
+export const metadata: Metadata = {
+  title: "Produtos | Stockly",
+}; 
 
 export default Products;

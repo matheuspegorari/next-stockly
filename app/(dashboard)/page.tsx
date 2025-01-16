@@ -10,6 +10,7 @@ import Header, {
   HeaderSubtitle,
   HeaderTitle,
 } from "@/app/_components/header";
+import { Metadata } from "next";
 import { Suspense } from "react";
 
 const DashboardContent = () => {
@@ -57,5 +58,9 @@ const Home = () => {
     </div>
   );
 };
+
+export const metadata: Metadata = {
+  title: "Dashboard | Stockly",
+}; 
 
 export default Home;
