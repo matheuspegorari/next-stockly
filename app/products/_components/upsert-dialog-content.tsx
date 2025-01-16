@@ -25,6 +25,7 @@ import { Input } from "@/app/_components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
 import { toast } from "sonner";
@@ -38,16 +39,24 @@ const UpsertProductDialogContent = ({
   defaultValues,
   onSuccessfulSubmit,
 }: UpsertProductDialogContentProps) => {
+  const [isCreatingProduct, setIsCreatingProduct] = useState(false);
+  const isEditint = !!defaultValues;
   const { execute: executeUpsertProduct } = useAction(upsertProduct, {
     onSuccess: () => {
-      toast.success("Produto salvo com sucesso");
+      toast.success(`Produto ${isEditint ? "editado " : "criado"} com sucesso`);
       onSuccessfulSubmit?.();
+      setIsCreatingProduct(false);
     },
     onError: () => {
       toast.error("Erro ao salvar o produto");
+      setIsCreatingProduct(false);
+    },
+    onExecute: () => {
+      toast.info(`${isEditint ? "Editando " : "Criando"} produto...`);
+      setIsCreatingProduct(true);
     },
   });
-  const isEditint = !!defaultValues;
+
   const form = useForm<UpsertProductSchemaType>({
     shouldUnregister: true,
     resolver: zodResolver(upsertProductSchema),
@@ -55,7 +64,7 @@ const UpsertProductDialogContent = ({
   });
 
   const onSubmit = async (data: UpsertProductSchemaType) => {
-    executeUpsertProduct({...data, id: defaultValues?.id});
+    executeUpsertProduct({ ...data, id: defaultValues?.id });
   };
 
   return (
@@ -128,10 +137,11 @@ const UpsertProductDialogContent = ({
                 Cancelar
               </Button>
             </DialogClose>
-            <Button type="submit" disabled={form.formState.isSubmitting}>
-              {form.formState.isSubmitting && (
-                <Loader2Icon className="animate-spin" size={18} />
-              )}
+            <Button type="submit" disabled={isCreatingProduct}>
+              {form.formState.isSubmitting ||
+                (isCreatingProduct && (
+                  <Loader2Icon className="animate-spin" size={18} />
+                ))}
               Salvar
             </Button>
           </DialogFooter>
