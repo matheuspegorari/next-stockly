@@ -9,31 +9,28 @@ export interface DayTotalRevenue {
 }
 
 const _getChartRevenue = async (): Promise<DayTotalRevenue[]> => {
-  const today = dayjs().tz("America/Sao_Paulo").startOf("day")
-  const last14Days = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map(
-    (day) => {
-      return today.subtract(day, "day").toDate();
-    },
-  );
+  const today = dayjs().tz("America/Sao_Paulo").startOf("day");
+  
+  // Generate array of dates for the WHERE IN clause
+  const dates = Array.from({ length: 14 }).map((_, index) => {
+    return today.subtract(index, "day").format("YYYY-MM-DD");
+  });
 
-  const totalLast14DaysRevenue: DayTotalRevenue[] = [];
+  const revenues = await db.$queryRaw<Array<{ date: string; total: number | null }>>`
+    SELECT 
+      TO_CHAR(d.date::date, 'DD/MM') as date,
+      COALESCE(SUM(sp.quantity * sp."unitPrice"), 0) as total
+    FROM unnest(${dates}::date[]) WITH ORDINALITY AS d(date, ord)
+    LEFT JOIN "Sale" s ON 
+      DATE(s.date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo') = d.date
+    LEFT JOIN "SaleProduct" sp ON sp."saleId" = s.id
+    GROUP BY d.date, d.ord
+    ORDER BY d.ord ASC`;
 
-  for (const day of last14Days) {
-    const totalRevenue = await db.$queryRaw<[{ total: number | null }]>`
-        SELECT COALESCE(SUM(sp.quantity * sp."unitPrice"), 0) as total 
-        FROM "SaleProduct" sp
-        INNER JOIN "Sale" s ON s.id = sp."saleId"
-        WHERE DATE(s.date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo') = 
-                    DATE(${dayjs(day).tz("America/Sao_Paulo").format("YYYY-MM-DD")})
-    `;
-
-    totalLast14DaysRevenue.push({
-      day: dayjs(day).tz("America/Sao_Paulo").format("DD/MM"),
-      totalRevenue: Number(totalRevenue[0].total || 0),
-    });
-  }
-
-  return totalLast14DaysRevenue;
+  return revenues.map(row => ({
+    day: row.date,
+    totalRevenue: Number(row.total || 0)
+  }));
 };
 
 export const getChartRevenue = unstable_cache(
