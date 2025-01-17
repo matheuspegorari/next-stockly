@@ -9,7 +9,7 @@ export interface DayTotalRevenue {
 }
 
 const _getChartRevenue = async (): Promise<DayTotalRevenue[]> => {
-  const today = dayjs().endOf("day").tz("America/Sao_Paulo");
+  const today = dayjs().tz("America/Sao_Paulo").startOf("day")
   const last14Days = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map(
     (day) => {
       return today.subtract(day, "day").toDate();

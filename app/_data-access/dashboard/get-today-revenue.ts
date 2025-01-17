@@ -3,7 +3,7 @@ import { db } from "@/app/_lib/prisma";
 import { unstable_cache } from "next/cache";
 import "server-only";
 
-const today = dayjs().endOf("day").tz("America/Sao_Paulo");
+const today = dayjs().tz("America/Sao_Paulo").startOf("day")
 
 const _getTodayRevenue = async (): Promise<number> => {
   const todayRevenue = await db.$queryRaw<[{ total: number }]>`
