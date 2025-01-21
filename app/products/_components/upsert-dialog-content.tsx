@@ -52,7 +52,7 @@ const UpsertProductDialogContent = ({
       setIsCreatingProduct(false);
     },
     onExecute: () => {
-      toast.info(`${isEditint ? "Editando " : "Criando"} produto...`);
+      toast.loading(`${isEditint ? "Editando " : "Criando"} produto...`);
       setIsCreatingProduct(true);
     },
   });

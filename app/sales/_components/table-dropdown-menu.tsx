@@ -33,11 +33,14 @@ interface SaleTableDropdownMenuProps {
 
 const SalesTableDropdownMenu = ({ sale }: SaleTableDropdownMenuProps) => {
   const { execute: executeDelete } = useAction(deleteSale, {
+    onExecute: () => {
+      toast.loading("Deletando venda...");
+    },
     onSuccess: () => {
-      toast.success("Venda deletada com sucesso.");
+      toast.success("Venda deletada com sucesso!");
     },
     onError: () => {
-      toast.error("Erro ao deletar a venda.");
+      toast.error("Erro ao deletar a venda!");
     },
   });
 

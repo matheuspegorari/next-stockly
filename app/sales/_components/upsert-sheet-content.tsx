@@ -71,12 +71,12 @@ const UpsertSalesSheetContent = ({
   const { execute: executeCreateSale } = useAction(createSale, {    
     onExecute: () => {
       setIsCreatingSale(true);
-      toast.info("Criando venda...");
+      toast.loading("Criando venda...");
     },
     onSuccess: () => {
       setIsCreatingSale(false);
       setSelectedProducts([]);
-      toast.success("Venda realizada com sucesso");
+      toast.success("Venda realizada com sucesso!");
       onSubmitSuccess();
     },
     onError: ({ error: { validationErrors, serverError } }) => {
