@@ -11,6 +11,7 @@ import { toast } from "sonner";
 
 interface SalesTableDropdownMenuProps {
   product: Pick<Product, "id">;
+  // eslint-disable-next-line no-unused-vars
   onDelete: (productId: string) => void;
 }
 

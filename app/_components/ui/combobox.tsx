@@ -23,6 +23,7 @@ export interface ComboboxOption {
 interface ComboboxProps {
   options: ComboboxOption[];
   value: string;
+  // eslint-disable-next-line no-unused-vars
   onChange: (value: string) => void;
   placeholder?: string;
 }
