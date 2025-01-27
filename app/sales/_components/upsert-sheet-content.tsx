@@ -34,7 +34,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, LoaderCircle, PlusIcon } from "lucide-react";
 import { flattenValidationErrors } from "next-safe-action";
 import { useAction } from "next-safe-action/hooks";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -68,18 +68,23 @@ const UpsertSalesSheetContent = ({
   productOptions,
   onSubmitSuccess,
 }: UpsertSalesSheetContentProps) => {
+  const toastIdRef = useRef<string | number | null>(null);
   const { execute: executeCreateSale } = useAction(createSale, {    
     onExecute: () => {
       setIsCreatingSale(true);
-      toast.loading("Criando venda...");
+      toastIdRef.current = toast.loading("Processando venda...", {
+        dismissible: false,
+      });
     },
     onSuccess: () => {
+      if (toastIdRef.current) toast.dismiss(toastIdRef.current);
       setIsCreatingSale(false);
       setSelectedProducts([]);
       toast.success("Venda realizada com sucesso!");
       onSubmitSuccess();
     },
     onError: ({ error: { validationErrors, serverError } }) => {
+      if (toastIdRef.current) toast.dismiss(toastIdRef.current);
       const flattenedErrors = flattenValidationErrors(validationErrors);
       toast.error(serverError ?? flattenedErrors.formErrors[0]);
     },

@@ -39,22 +39,30 @@ const UpsertProductDialogContent = ({
   defaultValues,
   onSuccessfulSubmit,
 }: UpsertProductDialogContentProps) => {
+      const toastIdRef = useRef<string | number | null>(null);
+  
   const [isCreatingProduct, setIsCreatingProduct] = useState(false);
   const isEditint = !!defaultValues;
   const { execute: executeUpsertProduct } = useAction(upsertProduct, {
+    onExecute: () => {
+      toastIdRef.current = toast.loading("Processando venda...", {
+        dismissible: false,
+      });
+      toast.loading(`${isEditint ? "Editando " : "Criando"} produto...`);
+      setIsCreatingProduct(true);
+    },
     onSuccess: () => {
+      if (toastIdRef.current) toast.dismiss(toastIdRef.current);
       toast.success(`Produto ${isEditint ? "editado " : "criado"} com sucesso`);
       onSuccessfulSubmit?.();
       setIsCreatingProduct(false);
     },
     onError: () => {
+      if (toastIdRef.current) toast.dismiss(toastIdRef.current);
       toast.error("Erro ao salvar o produto");
       setIsCreatingProduct(false);
     },
-    onExecute: () => {
-      toast.loading(`${isEditint ? "Editando " : "Criando"} produto...`);
-      setIsCreatingProduct(true);
-    },
+    
   });
 
   const form = useForm<UpsertProductSchemaType>({
