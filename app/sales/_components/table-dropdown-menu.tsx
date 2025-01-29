@@ -17,7 +17,11 @@ import {
   AlertDialogTrigger,
 } from "@/app/_components/ui/alert-dialog";
 import { Button } from "@/app/_components/ui/button";
-import { Sale } from "@prisma/client";
+import { ComboboxOption } from "@/app/_components/ui/combobox";
+import { Sheet, SheetTrigger } from "@/app/_components/ui/sheet";
+import { ProductDto } from "@/app/_data-access/product/get-products";
+import { SaleDto } from "@/app/_data-access/sales/get-sales";
+import UpsertSalesSheetContent from "@/app/sales/_components/upsert-sheet-content";
 import {
   ClipboardCopyIcon,
   EditIcon,
@@ -25,28 +29,38 @@ import {
   TrashIcon,
 } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
+import { useState } from "react";
 import { toast } from "sonner";
 
 interface SaleTableDropdownMenuProps {
-  sale: Pick<Sale, "id">;
+  sale: Pick<SaleDto, "id" | "saleProducts">;
+  productOptions: ComboboxOption[];
+  products: ProductDto[];
 }
 
-const SalesTableDropdownMenu = ({ sale }: SaleTableDropdownMenuProps) => {
+const SalesTableDropdownMenu = ({
+  sale,
+  productOptions,
+  products,
+}: SaleTableDropdownMenuProps) => {
   const { execute: executeDelete } = useAction(deleteSale, {
     onExecute: () => {
       toast.loading("Deletando venda...");
     },
     onSuccess: () => {
+      toast.dismiss();
       toast.success("Venda deletada com sucesso!");
     },
     onError: () => {
+      toast.dismiss();
       toast.error("Erro ao deletar a venda!");
     },
   });
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   const handleConfirmDeleteClick = () => executeDelete({ id: sale.id });
   return (
-    <>
+    <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <AlertDialog>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -65,10 +79,12 @@ const SalesTableDropdownMenu = ({ sale }: SaleTableDropdownMenuProps) => {
               <ClipboardCopyIcon />
               Copiar ID
             </DropdownMenuItem>
-            <DropdownMenuItem className="gap-1.5">
-              <EditIcon />
-              Editar
-            </DropdownMenuItem>
+            <SheetTrigger asChild>
+              <DropdownMenuItem className="gap-1.5">
+                <EditIcon />
+                Editar
+              </DropdownMenuItem>
+            </SheetTrigger>
             <AlertDialogTrigger>
               <DropdownMenuItem className="gap-1.5">
                 <TrashIcon />
@@ -94,7 +110,19 @@ const SalesTableDropdownMenu = ({ sale }: SaleTableDropdownMenuProps) => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+      <UpsertSalesSheetContent
+        saleId={sale.id}
+        products={products}
+        productOptions={productOptions}
+        defaultSelectedProducts={sale.saleProducts.map((saleProduct) => ({
+          id: saleProduct.productId,
+          quantity: saleProduct.quantity,
+          name: saleProduct.productName,
+          price: saleProduct.unitPrice,
+        }))}
+        onSubmitSuccess={() => setSheetOpen(false)}
+      />
+    </Sheet>
   );
 };
 

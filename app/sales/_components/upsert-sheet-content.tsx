@@ -1,5 +1,5 @@
 "use client";
-import { createSale } from "@/app/_actions/sales/create-sale";
+import { upsertSale } from "@/app/_actions/sales/create-sale";
 import { Button } from "@/app/_components/ui/button";
 import { Combobox, ComboboxOption } from "@/app/_components/ui/combobox";
 import {
@@ -34,7 +34,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, LoaderCircle, PlusIcon } from "lucide-react";
 import { flattenValidationErrors } from "next-safe-action";
 import { useAction } from "next-safe-action/hooks";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -46,15 +46,20 @@ const formSchema = z.object({
 });
 type FormSchema = z.infer<typeof formSchema>;
 
+interface SelectedProduct {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+}
+
 interface UpsertSalesSheetContentProps {
+  saleId?: string;
+  defaultSelectedProducts?: SelectedProduct[];
   products: ProductDto[];
   productOptions: ComboboxOption[];
   onSubmitSuccess: () => void;
 }
-
-type SelectedProducts = ProductDto & {
-  quantity: number;
-};
 
 const isQuantityExceedStock = (
   desiredQuantity: number,
@@ -64,34 +69,31 @@ const isQuantityExceedStock = (
 };
 
 const UpsertSalesSheetContent = ({
+  saleId,
+  defaultSelectedProducts,
   products,
   productOptions,
   onSubmitSuccess,
 }: UpsertSalesSheetContentProps) => {
-  const toastIdRef = useRef<string | number | null>(null);
-  const { execute: executeCreateSale } = useAction(createSale, {    
+  const { execute: executeCreateSale } = useAction(upsertSale, {
     onExecute: () => {
       setIsCreatingSale(true);
-      toastIdRef.current = toast.loading("Processando venda...", {
-        dismissible: false,
-      });
     },
     onSuccess: () => {
-      if (toastIdRef.current) toast.dismiss(toastIdRef.current);
+      toast.dismiss();
       setIsCreatingSale(false);
-      setSelectedProducts([]);
-      toast.success("Venda realizada com sucesso!");
+      toast.success(`Venda ${saleId ? "editada" : "realizada"} com sucesso!`);
       onSubmitSuccess();
     },
     onError: ({ error: { validationErrors, serverError } }) => {
-      if (toastIdRef.current) toast.dismiss(toastIdRef.current);
+      toast.dismiss();
       const flattenedErrors = flattenValidationErrors(validationErrors);
       toast.error(serverError ?? flattenedErrors.formErrors[0]);
     },
   });
 
-  const [selectedProducts, setSelectedProducts] = useState<SelectedProducts[]>(
-    [],
+  const [selectedProducts, setSelectedProducts] = useState<SelectedProduct[]>(
+    defaultSelectedProducts ?? [],
   );
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
@@ -166,6 +168,7 @@ const UpsertSalesSheetContent = ({
     if (isCreatingSale) return;
 
     await executeCreateSale({
+      id: saleId,
       products: selectedProducts.map((product) => ({
         id: product.id,
         quantity: product.quantity,
@@ -174,11 +177,11 @@ const UpsertSalesSheetContent = ({
   };
 
   return (
-    <SheetContent className="!max-w-[700px]">
+    <SheetContent className="!max-w-[700px] overflow-auto">
       <SheetHeader>
-        <SheetTitle>Nova venda</SheetTitle>
+        <SheetTitle>{saleId ? "Editando Venda" : "Nova Venda"}</SheetTitle>
         <SheetDescription>
-          Insira as informações da venda abaixo
+          Por favor, preencha as informações da venda
         </SheetDescription>
       </SheetHeader>
       <Form {...form}>
@@ -273,7 +276,9 @@ const UpsertSalesSheetContent = ({
           ) : (
             <Check />
           )}
-          {isCreatingSale ? "Realizando venda..." : "Finalizar venda"}
+          {isCreatingSale
+            ? `${saleId ? "Editando" : "Realizando"} venda...`
+            : "Finalizar venda"}
         </Button>
       </SheetFooter>
     </SheetContent>

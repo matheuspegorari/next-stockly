@@ -25,7 +25,7 @@ import { Input } from "@/app/_components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
 import { toast } from "sonner";
@@ -39,30 +39,21 @@ const UpsertProductDialogContent = ({
   defaultValues,
   onSuccessfulSubmit,
 }: UpsertProductDialogContentProps) => {
-      const toastIdRef = useRef<string | number | null>(null);
-  
   const [isCreatingProduct, setIsCreatingProduct] = useState(false);
-  const isEditint = !!defaultValues;
+  const isEditing = !!defaultValues;
   const { execute: executeUpsertProduct } = useAction(upsertProduct, {
     onExecute: () => {
-      toastIdRef.current = toast.loading("Processando venda...", {
-        dismissible: false,
-      });
-      toast.loading(`${isEditint ? "Editando " : "Criando"} produto...`);
       setIsCreatingProduct(true);
     },
     onSuccess: () => {
-      if (toastIdRef.current) toast.dismiss(toastIdRef.current);
-      toast.success(`Produto ${isEditint ? "editado " : "criado"} com sucesso`);
+      toast.success(`Produto ${isEditing ? "editado " : "criado"} com sucesso`);
       onSuccessfulSubmit?.();
       setIsCreatingProduct(false);
     },
     onError: () => {
-      if (toastIdRef.current) toast.dismiss(toastIdRef.current);
       toast.error("Erro ao salvar o produto");
       setIsCreatingProduct(false);
     },
-    
   });
 
   const form = useForm<UpsertProductSchemaType>({
@@ -80,7 +71,7 @@ const UpsertProductDialogContent = ({
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <DialogHeader>
-            <DialogTitle>{isEditint ? "Editar" : "Novo"} produto</DialogTitle>
+            <DialogTitle>{isEditing ? "Editar" : "Novo"} produto</DialogTitle>
             <DialogDescription>Insira as informações abaixo</DialogDescription>
           </DialogHeader>
           <FormField
