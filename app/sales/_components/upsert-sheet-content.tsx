@@ -80,7 +80,6 @@ const UpsertSalesSheetContent = ({
       setIsCreatingSale(true);
     },
     onSuccess: () => {
-      toast.dismiss();
       setIsCreatingSale(false);
       toast.success(`Venda ${saleId ? "editada" : "realizada"} com sucesso!`);
       onSubmitSuccess();

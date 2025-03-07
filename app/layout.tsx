@@ -21,8 +21,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
         <div className="flex h-full">
-          <div className="hidden md:flex">
-          <Sidebar />
+          <div className="flex h-full  bg-white shadow-lg transition-transform">
+            <Sidebar />
           </div>
           {children}
         </div>
