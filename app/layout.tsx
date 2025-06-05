@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Sidebar from "./_components/sidebar";
 import { Toaster } from "./_components/ui/sonner";
+import { ThemeProvider } from "./theme-provider";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], display: "auto" });
@@ -15,19 +16,21 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} antialiased`}>
-        <div className="flex h-full">
-          <div className="flex h-full  bg-white shadow-lg transition-transform">
-            <Sidebar />
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <div className="flex h-full">
+            <div className="flex h-full bg-white shadow-lg transition-transform">
+              <Sidebar />
+            </div>
+            {children}
           </div>
-          {children}
-        </div>
-        <Toaster />
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
-  );
+  )
 }
